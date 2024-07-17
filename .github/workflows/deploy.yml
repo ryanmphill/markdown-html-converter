@@ -30,9 +30,12 @@ jobs:
                 --protocol tcp \
                 --port 22 \
                 --cidr ${{ steps.ip.outputs.ipv4 }}/32
-        - name: ssh into your ec2 and do whatever
+        - name: ssh into ec2 instance
           run: |
-            ssh -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash -s' < deploy_script.sh
+            echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > /tmp/id_rsa
+            chmod 400 /tmp/id_rsa
+            ssh -i "/tmp/id_rsa" ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash -s' < deploy_script.sh
+            run: rm /tmp/id_rsa
         - name: revoke runner ip address
           run: |
             aws ec2 revoke-security-group-ingress \
