@@ -17,7 +17,7 @@ def markdown_to_html(request):
     try:
         md_string = request.data["markdown"]
         html = markdown.markdown(md_string)
-        return Response({"html": html, "hello": "world"}, status=status.HTTP_200_OK)
+        return Response({"html": html}, status=status.HTTP_200_OK)
     except KeyError as ex:
         return Response(
             {"message": f"{ex.args[0]} is required"}, status=status.HTTP_400_BAD_REQUEST
