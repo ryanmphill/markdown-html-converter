@@ -3,6 +3,11 @@
 DRY_RUN=$1
 
 echo "Pulling latest code from repository..."
+
+
+# Skip actual git pull in dry run
+[ "$DRY_RUN" != "true" ] && cd /home/ubuntu/markdown-html-converter
+
 # Skip actual git pull in dry run
 [ "$DRY_RUN" != "true" ] && source env/bin/activate
 
