@@ -1,0 +1,42 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+    deploy:
+        name: deploy
+        runs-on: ubuntu-latest
+        env:
+            AWS_INSTANCE_SG_ID: ${{ secrets.AWS_INSTANCE_SG_ID }}
+            ACTIONS_RUNNER_DEBUG: true
+        steps:
+        - name: configure aws credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }}
+        - name: get runner ip address
+          id: ip
+          uses: haythem/public-ip@v1.2
+        - name: whitelist runner ip address
+          run: |
+            aws ec2 authorize-security-group-ingress \
+                --group-id $AWS_INSTANCE_SG_ID \
+                --protocol tcp \
+                --port 22 \
+                --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        - name: ssh into your ec2 and do whatever
+          run: |
+            ssh -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash -s' < deploy_script.sh true
+        - name: revoke runner ip address
+          run: |
+            aws ec2 revoke-security-group-ingress \
+                --group-id $AWS_INSTANCE_SG_ID \
+                --protocol tcp \
+                --port 22 \
+                --cidr ${{ steps.ip.outputs.ipv4 }}/32
