@@ -34,7 +34,7 @@ jobs:
           run: |
             echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > /tmp/id_rsa
             chmod 400 /tmp/id_rsa
-            ssh -i "/tmp/id_rsa" ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash -s' < deploy_script.sh
+            ssh -i "/tmp/id_rsa" ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash /home/ubuntu/markdown-html-converter/deploy_script.sh'
             rm /tmp/id_rsa
         - name: revoke runner ip address
           run: |
