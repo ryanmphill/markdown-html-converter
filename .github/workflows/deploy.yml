@@ -32,7 +32,7 @@ jobs:
                 --cidr ${{ steps.ip.outputs.ipv4 }}/32
         - name: ssh into your ec2 and do whatever
           run: |
-            ssh -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash -s' < deploy_script.sh true
+            ssh -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_INSTANCE_USER_DNS_CONNECTION }} 'bash -s' < deploy_script.sh
         - name: revoke runner ip address
           run: |
             aws ec2 revoke-security-group-ingress \
