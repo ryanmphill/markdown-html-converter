@@ -50,6 +50,9 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'http://d22s7i31jv291j.cloudfront.net',
+    'https://d22s7i31jv291j.cloudfront.net',
+    'http://markdown-html-converter.s3-website.us-east-2.amazonaws.com',
 )
 
 
